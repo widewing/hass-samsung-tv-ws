@@ -51,13 +51,11 @@ async def async_setup_entry(
 ) -> None:
     """Set up Samsung TV WS selects."""
     coordinator: SamsungTvWsCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities(
-        [
-            SamsungTvWsAppSelect(coordinator),
-            SamsungTvWsArtworkSelect(coordinator),
-        ],
-        True,
-    )
+    entities: list[SelectEntity] = [SamsungTvWsAppSelect(coordinator)]
+    if coordinator.art_supported:
+        entities.append(SamsungTvWsArtworkSelect(coordinator))
+
+    async_add_entities(entities, True)
 
 
 class SamsungTvWsAppSelect(SamsungTvWsEntity, SelectEntity):

@@ -100,8 +100,8 @@ def async_setup_services(hass: HomeAssistant) -> None:
 
     async def get_device_info(call: ServiceCall) -> ServiceResponse:
         coordinator = _coordinator_from_call(hass, call)
-        await _run(coordinator.async_request_refresh())
-        return {"device_info": coordinator.data or {}}
+        info = await _run(coordinator.async_get_device_info())
+        return {"device_info": info}
 
     async def art_set_mode(call: ServiceCall) -> None:
         coordinator = _coordinator_from_call(hass, call)

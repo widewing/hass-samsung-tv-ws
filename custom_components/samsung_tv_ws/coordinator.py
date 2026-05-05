@@ -24,7 +24,6 @@ from .const import DEFAULT_TIMEOUT, DOMAIN
 _LOGGER = logging.getLogger(__name__)
 
 _T = TypeVar("_T")
-UPDATE_INTERVAL = timedelta(seconds=30)
 
 
 @dataclass(frozen=True)
@@ -55,7 +54,7 @@ class SamsungTvWsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             _LOGGER,
             config_entry=config_entry,
             name=DOMAIN,
-            update_interval=UPDATE_INTERVAL,
+            update_interval=timedelta(minutes=5),
         )
         self.config_entry = config_entry
         self.config = config

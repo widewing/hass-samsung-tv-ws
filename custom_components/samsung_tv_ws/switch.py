@@ -23,7 +23,8 @@ async def async_setup_entry(
 ) -> None:
     """Set up Samsung TV WS switches."""
     coordinator: SamsungTvWsCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([SamsungTvWsArtModeSwitch(coordinator)], True)
+    if coordinator.art_supported:
+        async_add_entities([SamsungTvWsArtModeSwitch(coordinator)], True)
 
 
 class SamsungTvWsArtModeSwitch(SamsungTvWsEntity, SwitchEntity):
