@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import partial
@@ -58,6 +59,7 @@ class SamsungTvWsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.config_entry = config_entry
         self.config = config
         self.session = async_get_clientsession(hass)
+        self._websocket_lock = asyncio.Lock()
 
     @property
     def unique_id(self) -> str:
@@ -120,7 +122,8 @@ class SamsungTvWsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     ) -> _T:
         """Run a blocking library call in Home Assistant's executor."""
         job = partial(func, method, *args, **kwargs)
-        return await self.hass.async_add_executor_job(job)
+        async with self._websocket_lock:
+            return await self.hass.async_add_executor_job(job)
 
     def _make_tv(self) -> SamsungTVWS:
         """Create a SamsungTVWS client for one blocking operation."""
