@@ -74,9 +74,6 @@ async def async_setup_entry(
 ) -> None:
     """Set up Samsung TV WS numbers."""
     coordinator: SamsungTvWsCoordinator = hass.data[DOMAIN][entry.entry_id]
-    if not coordinator.art_supported:
-        return
-
     async_add_entities(
         [
             SamsungTvWsArtNumber(coordinator, description)

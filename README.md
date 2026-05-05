@@ -6,6 +6,7 @@
 
 - UI 配置流添加电视。
 - 设备信息：通过 `/api/v2/` REST API 创建诊断 sensor，并写入 Home Assistant 设备注册表。
+  - 设备信息每 30 秒轮询一次；也可以调用 `samsung_tv_ws.get_device_info` 立即刷新。
 - 常用控制服务：
   - `samsung_tv_ws.send_key`
   - `samsung_tv_ws.run_app`
