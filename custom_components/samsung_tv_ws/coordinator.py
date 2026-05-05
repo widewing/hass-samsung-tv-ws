@@ -13,6 +13,7 @@ from typing import Any, TypeVar
 import aiohttp
 from samsungtvws import SamsungTVWS, exceptions
 from samsungtvws.async_rest import SamsungTVAsyncRest
+import websocket
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -24,6 +25,14 @@ from .const import DEFAULT_TIMEOUT, DOMAIN
 _LOGGER = logging.getLogger(__name__)
 
 _T = TypeVar("_T")
+ART_FALLBACK_PORT = 8001
+ART_CONNECTION_ERRORS = (
+    exceptions.ConnectionFailure,
+    OSError,
+    TimeoutError,
+    websocket.WebSocketException,
+)
+ART_CALL_ATTEMPTS = 2
 
 
 @dataclass(frozen=True)
@@ -123,12 +132,12 @@ class SamsungTvWsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         job = partial(func, method, *args, **kwargs)
         return await self.hass.async_add_executor_job(job)
 
-    def _make_tv(self) -> SamsungTVWS:
+    def _make_tv(self, port: int | None = None) -> SamsungTVWS:
         """Create a SamsungTVWS client for one blocking operation."""
         return SamsungTVWS(
             self.config.host,
             token_file=self.config.token_file,
-            port=self.config.port,
+            port=port or self.config.port,
             timeout=self.config.timeout,
             name=self.config.name,
         )
@@ -143,7 +152,32 @@ class SamsungTvWsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     def _art_call(self, method: str, *args: Any, **kwargs: Any) -> Any:
         """Execute an Art Mode method."""
-        tv = self._make_tv()
+        ports = [self.config.port]
+        if self.config.port != ART_FALLBACK_PORT:
+            ports.append(ART_FALLBACK_PORT)
+
+        last_error: BaseException | None = None
+        for port in ports:
+            for attempt in range(ART_CALL_ATTEMPTS):
+                try:
+                    return self._art_call_with_port(port, method, *args, **kwargs)
+                except ART_CONNECTION_ERRORS as err:
+                    last_error = err
+                    _LOGGER.debug(
+                        "Samsung Art API call %s failed on port %s, attempt %s",
+                        method,
+                        port,
+                        attempt + 1,
+                    )
+
+        assert last_error is not None
+        raise last_error
+
+    def _art_call_with_port(
+        self, port: int, method: str, *args: Any, **kwargs: Any
+    ) -> Any:
+        """Execute an Art Mode method on a specific port."""
+        tv = self._make_tv(port)
         art = tv.art()
         try:
             return getattr(art, method)(*args, **kwargs)

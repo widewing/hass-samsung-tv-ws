@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from samsungtvws import exceptions
+import websocket
 
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
@@ -23,6 +24,7 @@ _CONNECTION_ERRORS = (
     exceptions.HttpApiError,
     OSError,
     TimeoutError,
+    websocket.WebSocketException,
 )
 
 

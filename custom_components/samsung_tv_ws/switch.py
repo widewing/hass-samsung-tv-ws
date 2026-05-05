@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from samsungtvws import exceptions
+import websocket
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
@@ -59,6 +60,7 @@ class SamsungTvWsArtModeSwitch(SamsungTvWsEntity, SwitchEntity):
             exceptions.ResponseError,
             OSError,
             TimeoutError,
+            websocket.WebSocketException,
         ):
             self._art_available = False
             return
