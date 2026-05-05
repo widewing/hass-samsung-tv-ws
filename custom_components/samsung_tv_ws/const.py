@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
+
 from homeassistant.const import Platform
 
 DOMAIN = "samsung_tv_ws"
@@ -9,6 +11,7 @@ DOMAIN = "samsung_tv_ws"
 DEFAULT_NAME = "Home Assistant"
 DEFAULT_PORT = 8001
 DEFAULT_TIMEOUT = 10
+UPDATE_INTERVAL = timedelta(seconds=10)
 STORAGE_DIR = ".samsung_tv_ws"
 
 CONF_TIMEOUT = "timeout"

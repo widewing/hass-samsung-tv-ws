@@ -8,15 +8,21 @@ from typing import Any
 
 from samsungtvws import exceptions
 
-from homeassistant.components.number import NumberEntity, NumberMode
+from homeassistant.components.number import (
+    NumberEntity,
+    NumberEntityDescription,
+    NumberMode,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
+from .const import DOMAIN, UPDATE_INTERVAL
 from .coordinator import SamsungTvWsCoordinator
 from .entity import SamsungTvWsEntity
+
+SCAN_INTERVAL = UPDATE_INTERVAL
 
 _CONNECTION_ERRORS = (
     exceptions.ConnectionFailure,
@@ -26,18 +32,12 @@ _CONNECTION_ERRORS = (
 )
 
 
-@dataclass(frozen=True)
-class SamsungTvWsArtNumberDescription:
+@dataclass(frozen=True, kw_only=True)
+class SamsungTvWsArtNumberDescription(NumberEntityDescription):
     """Description for an Art Mode number entity."""
 
-    key: str
-    translation_key: str
-    icon: str
     get_method: str
     set_method: str
-    native_min_value: float
-    native_max_value: float
-    native_step: float
     value_converter: Callable[[float], int | float]
 
 

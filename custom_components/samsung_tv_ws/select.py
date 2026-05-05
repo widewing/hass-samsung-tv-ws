@@ -14,9 +14,11 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
+from .const import DOMAIN, UPDATE_INTERVAL
 from .coordinator import SamsungTvWsCoordinator
 from .entity import SamsungTvWsEntity
+
+SCAN_INTERVAL = UPDATE_INTERVAL
 
 _CONNECTION_ERRORS = (
     exceptions.ConnectionFailure,

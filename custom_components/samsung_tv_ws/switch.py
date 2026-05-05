@@ -11,9 +11,11 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
+from .const import DOMAIN, UPDATE_INTERVAL
 from .coordinator import SamsungTvWsCoordinator
 from .entity import SamsungTvWsEntity
+
+SCAN_INTERVAL = UPDATE_INTERVAL
 
 
 async def async_setup_entry(
