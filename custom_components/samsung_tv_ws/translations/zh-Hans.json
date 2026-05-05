@@ -1,0 +1,57 @@
+{
+  "title": "Samsung TV WS",
+  "config": {
+    "step": {
+      "user": {
+        "title": "添加 Samsung TV",
+        "description": "连接电视的 REST API。电视必须和 Home Assistant 在同一网段。",
+        "data": {
+          "host": "主机",
+          "port": "端口",
+          "name": "遥控器名称",
+          "timeout": "超时",
+          "token": "Token"
+        },
+        "data_description": {
+          "name": "电视授权弹窗里显示的设备名称。",
+          "token": "可选，已有的 Samsung websocket token。"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "无法连接电视 REST API。",
+      "unknown": "未知错误。"
+    },
+    "abort": {
+      "already_configured": "这台电视已经配置过。"
+    }
+  },
+  "entity": {
+    "number": {
+      "art_brightness": {
+        "name": "Art 亮度"
+      },
+      "art_color_temperature": {
+        "name": "Art 色温"
+      }
+    },
+    "select": {
+      "app_launcher": {
+        "name": "应用启动器"
+      },
+      "artwork": {
+        "name": "艺术作品"
+      }
+    },
+    "sensor": {
+      "device_info": {
+        "name": "设备信息"
+      }
+    },
+    "switch": {
+      "art_mode": {
+        "name": "Art Mode"
+      }
+    }
+  }
+}

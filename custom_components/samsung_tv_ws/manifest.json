@@ -1,0 +1,11 @@
+{
+  "domain": "samsung_tv_ws",
+  "name": "Samsung TV WS",
+  "codeowners": [],
+  "config_flow": true,
+  "documentation": "https://github.com/xchwarze/samsung-tv-ws-api",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "requirements": ["samsungtvws==3.0.4"],
+  "version": "0.1.0"
+}

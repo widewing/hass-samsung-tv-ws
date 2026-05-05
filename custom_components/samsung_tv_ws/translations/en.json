@@ -1,0 +1,57 @@
+{
+  "title": "Samsung TV WS",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add Samsung TV",
+        "description": "Connect to the TV REST API. The TV must be on the same subnet as Home Assistant.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "name": "Remote name",
+          "timeout": "Timeout",
+          "token": "Token"
+        },
+        "data_description": {
+          "name": "Name shown in the TV's device permission prompt.",
+          "token": "Optional existing Samsung websocket token."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the TV REST API.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This TV is already configured."
+    }
+  },
+  "entity": {
+    "number": {
+      "art_brightness": {
+        "name": "Art brightness"
+      },
+      "art_color_temperature": {
+        "name": "Art color temperature"
+      }
+    },
+    "select": {
+      "app_launcher": {
+        "name": "App launcher"
+      },
+      "artwork": {
+        "name": "Artwork"
+      }
+    },
+    "sensor": {
+      "device_info": {
+        "name": "Device info"
+      }
+    },
+    "switch": {
+      "art_mode": {
+        "name": "Art Mode"
+      }
+    }
+  }
+}

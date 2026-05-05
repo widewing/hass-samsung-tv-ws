@@ -1,0 +1,208 @@
+send_key:
+  name: Send key
+  description: Send a Samsung remote key code to the TV.
+  fields:
+    config_entry_id: &config_entry
+      required: true
+      selector:
+        config_entry:
+          integration: samsung_tv_ws
+    key:
+      required: true
+      example: KEY_HOME
+      selector:
+        text:
+    times:
+      default: 1
+      selector:
+        number:
+          min: 1
+          max: 20
+          mode: box
+    key_press_delay:
+      selector:
+        number:
+          min: 0
+          max: 10
+          step: 0.1
+          mode: box
+
+run_app:
+  name: Run app
+  description: Launch a TV app by Samsung app id.
+  fields:
+    config_entry_id: *config_entry
+    app_id:
+      required: true
+      example: "111299001912"
+      selector:
+        text:
+    app_type:
+      default: DEEP_LINK
+      selector:
+        select:
+          options:
+            - DEEP_LINK
+            - NATIVE_LAUNCH
+    meta_tag:
+      selector:
+        text:
+
+open_browser:
+  name: Open browser
+  description: Open a URL in the TV browser.
+  fields:
+    config_entry_id: *config_entry
+    url:
+      required: true
+      example: https://duckduckgo.com
+      selector:
+        text:
+          type: url
+
+send_text:
+  name: Send text
+  description: Send text to the active TV input field.
+  fields:
+    config_entry_id: *config_entry
+    text:
+      required: true
+      selector:
+        text:
+
+list_apps:
+  name: List apps
+  description: Return installed TV apps when the TV model supports it.
+  fields:
+    config_entry_id: *config_entry
+
+get_device_info:
+  name: Get device info
+  description: Return the raw Samsung /api/v2 device information.
+  fields:
+    config_entry_id: *config_entry
+
+art_set_mode:
+  name: Set Art Mode
+  description: Turn Frame TV Art Mode on or off.
+  fields:
+    config_entry_id: *config_entry
+    mode:
+      required: true
+      selector:
+        boolean:
+
+art_get_current:
+  name: Get current artwork
+  description: Return the current Art Mode artwork payload.
+  fields:
+    config_entry_id: *config_entry
+
+art_list:
+  name: List artworks
+  description: Return artworks available in Art Mode.
+  fields:
+    config_entry_id: *config_entry
+    category:
+      selector:
+        text:
+
+art_get_matte_list:
+  name: Get matte list
+  description: Return matte types and colors supported by the TV.
+  fields:
+    config_entry_id: *config_entry
+
+art_upload:
+  name: Upload artwork
+  description: Upload a local image file to Frame TV Art Mode.
+  fields:
+    config_entry_id: *config_entry
+    path:
+      required: true
+      example: /config/www/art/image.png
+      selector:
+        text:
+    matte:
+      default: shadowbox_polar
+      selector:
+        text:
+    portrait_matte:
+      default: shadowbox_polar
+      selector:
+        text:
+    file_type:
+      default: png
+      selector:
+        select:
+          options:
+            - png
+            - jpg
+            - jpeg
+
+art_select:
+  name: Select artwork
+  description: Select an artwork by content id.
+  fields:
+    config_entry_id: *config_entry
+    content_id:
+      required: true
+      selector:
+        text:
+    category:
+      selector:
+        text:
+    show:
+      default: true
+      selector:
+        boolean:
+
+art_delete:
+  name: Delete artwork
+  description: Delete an uploaded artwork by content id.
+  fields:
+    config_entry_id: *config_entry
+    content_id:
+      required: true
+      selector:
+        text:
+
+art_change_matte:
+  name: Change artwork matte
+  description: Change the matte for an artwork by content id.
+  fields:
+    config_entry_id: *config_entry
+    content_id:
+      required: true
+      selector:
+        text:
+    matte_id:
+      required: true
+      example: none
+      selector:
+        text:
+    portrait_matte:
+      selector:
+        text:
+
+art_set_brightness:
+  name: Set Art Mode brightness
+  description: Set the Art Mode brightness value accepted by the TV.
+  fields:
+    config_entry_id: *config_entry
+    value:
+      required: true
+      selector:
+        number:
+          mode: box
+
+art_set_color_temperature:
+  name: Set Art Mode color temperature
+  description: Set the Art Mode color temperature value accepted by the TV.
+  fields:
+    config_entry_id: *config_entry
+    value:
+      required: true
+      selector:
+        number:
+          mode: box
