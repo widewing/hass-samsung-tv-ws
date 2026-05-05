@@ -8,7 +8,11 @@ from typing import Any
 
 from samsungtvws import exceptions
 
-from homeassistant.components.number import NumberEntity, NumberMode
+from homeassistant.components.number import (
+    NumberEntity,
+    NumberEntityDescription,
+    NumberMode,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
@@ -26,18 +30,12 @@ _CONNECTION_ERRORS = (
 )
 
 
-@dataclass(frozen=True)
-class SamsungTvWsArtNumberDescription:
+@dataclass(frozen=True, kw_only=True)
+class SamsungTvWsArtNumberDescription(NumberEntityDescription):
     """Description for an Art Mode number entity."""
 
-    key: str
-    translation_key: str
-    icon: str
     get_method: str
     set_method: str
-    native_min_value: float
-    native_max_value: float
-    native_step: float
     value_converter: Callable[[float], int | float]
 
 
@@ -51,6 +49,7 @@ ART_NUMBER_DESCRIPTIONS: tuple[SamsungTvWsArtNumberDescription, ...] = (
         native_min_value=0,
         native_max_value=100,
         native_step=1,
+        mode=NumberMode.SLIDER,
         value_converter=round,
     ),
     SamsungTvWsArtNumberDescription(
@@ -62,6 +61,7 @@ ART_NUMBER_DESCRIPTIONS: tuple[SamsungTvWsArtNumberDescription, ...] = (
         native_min_value=-5,
         native_max_value=5,
         native_step=1,
+        mode=NumberMode.SLIDER,
         value_converter=round,
     ),
 )
@@ -89,10 +89,6 @@ async def async_setup_entry(
 class SamsungTvWsArtNumber(SamsungTvWsEntity, NumberEntity):
     """Number entity for an Art Mode setting."""
 
-    _attr_device_class = None
-    _attr_mode = NumberMode.SLIDER
-    _attr_native_unit_of_measurement = None
-
     def __init__(
         self,
         coordinator: SamsungTvWsCoordinator,
@@ -102,11 +98,6 @@ class SamsungTvWsArtNumber(SamsungTvWsEntity, NumberEntity):
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_unique_id = f"{coordinator.unique_id}_{description.key}"
-        self._attr_translation_key = description.translation_key
-        self._attr_icon = description.icon
-        self._attr_native_min_value = description.native_min_value
-        self._attr_native_max_value = description.native_max_value
-        self._attr_native_step = description.native_step
         self._attr_native_value: float | None = None
         self._setting_available = True
 

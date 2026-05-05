@@ -54,7 +54,7 @@ class SamsungTvWsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             _LOGGER,
             config_entry=config_entry,
             name=DOMAIN,
-            update_interval=timedelta(minutes=5),
+            update_interval=timedelta(seconds=10),
         )
         self.config_entry = config_entry
         self.config = config
