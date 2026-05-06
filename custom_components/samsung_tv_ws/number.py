@@ -84,8 +84,7 @@ async def async_setup_entry(
         [
             SamsungTvWsArtNumber(coordinator, description)
             for description in ART_NUMBER_DESCRIPTIONS
-        ],
-        True,
+        ]
     )
 
 

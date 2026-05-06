@@ -51,7 +51,7 @@ async def async_setup_entry(
     if coordinator.art_supported:
         entities.append(SamsungTvWsArtworkSelect(coordinator))
 
-    async_add_entities(entities, True)
+    async_add_entities(entities)
 
 
 class SamsungTvWsArtworkSelect(SamsungTvWsEntity, SelectEntity):
