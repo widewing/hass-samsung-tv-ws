@@ -29,6 +29,7 @@ _LOGGER = logging.getLogger(__name__)
 _CONNECTION_ERRORS = (
     exceptions.ConnectionFailure,
     exceptions.HttpApiError,
+    exceptions.UnauthorizedError,
     OSError,
     TimeoutError,
 )
@@ -141,9 +142,11 @@ class SamsungTvWsArtNumber(SamsungTvWsEntity, NumberEntity):
         except _CONNECTION_ERRORS as err:
             if self._setting_available:
                 _LOGGER.warning(
-                    "Unable to fetch Samsung Art setting %s: %s",
+                    "Unable to fetch Samsung Art setting %s (%s): %s",
                     self.entity_description.key,
+                    type(err).__name__,
                     err,
+                    exc_info=True,
                 )
             self._setting_available = False
             return

@@ -25,6 +25,7 @@ _LOGGER = logging.getLogger(__name__)
 _CONNECTION_ERRORS = (
     exceptions.ConnectionFailure,
     exceptions.HttpApiError,
+    exceptions.UnauthorizedError,
     OSError,
     TimeoutError,
 )
@@ -84,14 +85,24 @@ class SamsungTvWsArtworkSelect(SamsungTvWsEntity, SelectEntity):
             artworks = await self.coordinator.async_art_call("available")
         except exceptions.ResponseError as err:
             if self._artworks_available:
-                _LOGGER.warning("Unable to fetch Samsung artwork list: %s", err)
+                _LOGGER.warning(
+                    "Unable to fetch Samsung artwork list (%s): %s",
+                    type(err).__name__,
+                    err,
+                    exc_info=True,
+                )
             self._artworks_available = False
             self._attr_options = []
             self._artworks = {}
             return
         except _CONNECTION_ERRORS as err:
             if self._artworks_available:
-                _LOGGER.warning("Unable to fetch Samsung artwork list: %s", err)
+                _LOGGER.warning(
+                    "Unable to fetch Samsung artwork list (%s): %s",
+                    type(err).__name__,
+                    err,
+                    exc_info=True,
+                )
             self._artworks_available = False
             return
 

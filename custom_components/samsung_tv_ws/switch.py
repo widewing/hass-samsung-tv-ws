@@ -60,12 +60,19 @@ class SamsungTvWsArtModeSwitch(SamsungTvWsEntity, SwitchEntity):
             mode = await self.coordinator.async_art_call("get_artmode")
         except (
             exceptions.ConnectionFailure,
+            exceptions.HttpApiError,
             exceptions.ResponseError,
+            exceptions.UnauthorizedError,
             OSError,
             TimeoutError,
         ) as err:
             if self._art_available:
-                _LOGGER.warning("Unable to fetch Samsung Art Mode state: %s", err)
+                _LOGGER.warning(
+                    "Unable to fetch Samsung Art Mode state (%s): %s",
+                    type(err).__name__,
+                    err,
+                    exc_info=True,
+                )
             self._art_available = False
             return
 

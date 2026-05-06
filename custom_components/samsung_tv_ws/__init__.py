@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 
 from homeassistant.config_entries import ConfigEntry
@@ -20,6 +21,8 @@ from .const import (
 )
 from .coordinator import SamsungTvWsConfig, SamsungTvWsCoordinator
 from .services import async_setup_services
+
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -50,6 +53,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         ),
     )
     await coordinator.async_config_entry_first_refresh()
+    if not coordinator.art_supported:
+        _LOGGER.warning(
+            "Samsung TV REST data does not report Art Mode support; Art Mode "
+            "entities will not be created. FrameTVSupport=%r, isSupport=%r",
+            coordinator.device.get("FrameTVSupport"),
+            (coordinator.data or {}).get("isSupport"),
+        )
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
