@@ -1,9 +1,9 @@
 {
-  "title": "Samsung TV WS",
+  "title": "Samsung TV Art",
   "config": {
     "step": {
       "user": {
-        "title": "添加 Samsung TV",
+        "title": "添加 Samsung TV Art",
         "description": "连接电视的 REST API。电视必须和 Home Assistant 在同一网段。",
         "data": {
           "host": "主机",

@@ -1,4 +1,4 @@
-"""Coordinator and API helpers for Samsung TV WS."""
+"""Coordinator and API helpers for Samsung TV Art."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ _T = TypeVar("_T")
 
 
 @dataclass(frozen=True)
-class SamsungTvWsConfig:
+class SamsungTvArtConfig:
     """Runtime connection settings."""
 
     host: str
@@ -37,7 +37,7 @@ class SamsungTvWsConfig:
     token_file: str
 
 
-class SamsungTvWsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
+class SamsungTvArtCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Fetch Samsung TV device information and run commands."""
 
     config_entry: ConfigEntry
@@ -46,7 +46,7 @@ class SamsungTvWsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self,
         hass: HomeAssistant,
         config_entry: ConfigEntry,
-        config: SamsungTvWsConfig,
+        config: SamsungTvArtConfig,
     ) -> None:
         """Initialize the coordinator."""
         super().__init__(

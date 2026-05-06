@@ -1,9 +1,9 @@
 {
-  "title": "Samsung TV WS",
+  "title": "Samsung TV Art",
   "config": {
     "step": {
       "user": {
-        "title": "Add Samsung TV",
+        "title": "Add Samsung TV Art",
         "description": "Connect to the TV REST API. The TV must be on the same subnet as Home Assistant.",
         "data": {
           "host": "Host",

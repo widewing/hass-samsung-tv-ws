@@ -1,4 +1,4 @@
-# Samsung TV WS Home Assistant Integration
+# Samsung TV Art Home Assistant Integration
 
 基于 [`samsungtvws`](https://github.com/xchwarze/samsung-tv-ws-api) 的 Home Assistant 自定义集成。
 
@@ -7,12 +7,12 @@
 - UI 配置流添加电视。
 - 设备信息：通过 `/api/v2/` REST API 创建诊断 sensor，并写入 Home Assistant 设备注册表。
 - 常用控制服务：
-  - `samsung_tv_ws.send_key`
-  - `samsung_tv_ws.run_app`
-  - `samsung_tv_ws.open_browser`
-  - `samsung_tv_ws.send_text`
-  - `samsung_tv_ws.list_apps`
-  - `samsung_tv_ws.get_device_info`
+  - `samsung_tv_art.send_key`
+  - `samsung_tv_art.run_app`
+  - `samsung_tv_art.open_browser`
+  - `samsung_tv_art.send_text`
+  - `samsung_tv_art.list_apps`
+  - `samsung_tv_art.get_device_info`
 - Frame TV Art Mode：
   - `switch` 实体：Art Mode 开关。
   - `number` 实体：Art brightness、Art color temperature。
@@ -21,7 +21,7 @@
 
 ## 安装
 
-把 `custom_components/samsung_tv_ws` 复制到 Home Assistant 配置目录的 `custom_components` 下，重启 Home Assistant，然后在“设备与服务”里添加 `Samsung TV WS`。
+把 `custom_components/samsung_tv_art` 复制到 Home Assistant 配置目录的 `custom_components` 下，重启 Home Assistant，然后在“设备与服务”里添加 `Samsung TV Art`。
 
 默认端口是 `8001`。如果你的电视需要安全 websocket/token，尝试改用 `8002`。
 

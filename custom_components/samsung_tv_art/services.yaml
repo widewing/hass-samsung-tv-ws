@@ -6,7 +6,7 @@ send_key:
       required: true
       selector:
         config_entry:
-          integration: samsung_tv_ws
+          integration: samsung_tv_art
     key:
       required: true
       example: KEY_HOME

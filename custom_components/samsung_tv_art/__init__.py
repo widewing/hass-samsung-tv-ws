@@ -1,4 +1,4 @@
-"""Samsung TV WS integration."""
+"""Samsung TV Art integration."""
 
 from __future__ import annotations
 
@@ -19,21 +19,21 @@ from .const import (
     PLATFORMS,
     STORAGE_DIR,
 )
-from .coordinator import SamsungTvWsConfig, SamsungTvWsCoordinator
+from .coordinator import SamsungTvArtConfig, SamsungTvArtCoordinator
 from .services import async_setup_services
 
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    """Set up Samsung TV WS."""
+    """Set up Samsung TV Art."""
     hass.data.setdefault(DOMAIN, {})
     async_setup_services(hass)
     return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up Samsung TV WS from a config entry."""
+    """Set up Samsung TV Art from a config entry."""
     token_file = _token_file_path(hass, entry)
     await hass.async_add_executor_job(
         _prepare_token_file,
@@ -41,10 +41,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         entry.data.get(CONF_TOKEN),
     )
 
-    coordinator = SamsungTvWsCoordinator(
+    coordinator = SamsungTvArtCoordinator(
         hass,
         entry,
-        SamsungTvWsConfig(
+        SamsungTvArtConfig(
             host=entry.data[CONF_HOST],
             port=entry.data.get(CONF_PORT, DEFAULT_PORT),
             name=entry.data.get(CONF_NAME, DEFAULT_NAME),
@@ -67,7 +67,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Unload a Samsung TV WS config entry."""
+    """Unload a Samsung TV Art config entry."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
         hass.data[DOMAIN].pop(entry.entry_id, None)

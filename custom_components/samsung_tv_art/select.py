@@ -1,4 +1,4 @@
-"""Select platform for Samsung TV WS."""
+"""Select platform for Samsung TV Art."""
 
 from __future__ import annotations
 
@@ -16,8 +16,8 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN, UPDATE_INTERVAL
-from .coordinator import SamsungTvWsCoordinator
-from .entity import SamsungTvWsEntity
+from .coordinator import SamsungTvArtCoordinator
+from .entity import SamsungTvArtEntity
 
 SCAN_INTERVAL = UPDATE_INTERVAL
 _LOGGER = logging.getLogger(__name__)
@@ -45,22 +45,22 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up Samsung TV WS selects."""
-    coordinator: SamsungTvWsCoordinator = hass.data[DOMAIN][entry.entry_id]
+    """Set up Samsung TV Art selects."""
+    coordinator: SamsungTvArtCoordinator = hass.data[DOMAIN][entry.entry_id]
     entities: list[SelectEntity] = []
     if coordinator.art_supported:
-        entities.append(SamsungTvWsArtworkSelect(coordinator))
+        entities.append(SamsungTvArtArtworkSelect(coordinator))
 
     async_add_entities(entities)
 
 
-class SamsungTvWsArtworkSelect(SamsungTvWsEntity, SelectEntity):
+class SamsungTvArtArtworkSelect(SamsungTvArtEntity, SelectEntity):
     """Select entity that displays available Frame TV artwork."""
 
     _attr_icon = "mdi:image-multiple"
     _attr_translation_key = "artwork"
 
-    def __init__(self, coordinator: SamsungTvWsCoordinator) -> None:
+    def __init__(self, coordinator: SamsungTvArtCoordinator) -> None:
         """Initialize the artwork select."""
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.unique_id}_artwork"

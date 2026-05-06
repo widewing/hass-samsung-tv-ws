@@ -1,4 +1,4 @@
-"""Service actions for Samsung TV WS."""
+"""Service actions for Samsung TV Art."""
 
 from __future__ import annotations
 
@@ -54,14 +54,14 @@ from .const import (
     SERVICE_SEND_KEY,
     SERVICE_SEND_TEXT,
 )
-from .coordinator import SamsungTvWsCoordinator
+from .coordinator import SamsungTvArtCoordinator
 
 
 ENTRY_SCHEMA = vol.Schema({vol.Required(ATTR_CONFIG_ENTRY_ID): cv.string})
 
 
 def async_setup_services(hass: HomeAssistant) -> None:
-    """Register Samsung TV WS service actions."""
+    """Register Samsung TV Art service actions."""
 
     async def send_key(call: ServiceCall) -> None:
         coordinator = _coordinator_from_call(hass, call)
@@ -331,18 +331,18 @@ async def _run(awaitable: Any) -> Any:
         OSError,
         ValueError,
     ) as err:
-        raise HomeAssistantError(f"Samsung TV WS service failed: {err}") from err
+        raise HomeAssistantError(f"Samsung TV Art service failed: {err}") from err
 
 
 def _coordinator_from_call(
     hass: HomeAssistant,
     call: ServiceCall,
-) -> SamsungTvWsCoordinator:
+) -> SamsungTvArtCoordinator:
     """Resolve a service call to a loaded config entry coordinator."""
     entry_id = call.data[ATTR_CONFIG_ENTRY_ID]
     coordinator = hass.data.get(DOMAIN, {}).get(entry_id)
     if coordinator is None:
         raise HomeAssistantError(
-            f"Samsung TV WS config entry is not loaded: {entry_id}"
+            f"Samsung TV Art config entry is not loaded: {entry_id}"
         )
     return coordinator

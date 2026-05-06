@@ -1,4 +1,4 @@
-"""Config flow for Samsung TV WS."""
+"""Config flow for Samsung TV Art."""
 
 from __future__ import annotations
 
@@ -31,8 +31,8 @@ class CannotConnect(Exception):
     """Raised when the TV cannot be reached."""
 
 
-class SamsungTvWsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Samsung TV WS."""
+class SamsungTvArtConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+    """Handle a config flow for Samsung TV Art."""
 
     VERSION = 1
 

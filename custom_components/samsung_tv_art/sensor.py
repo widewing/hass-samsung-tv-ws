@@ -1,4 +1,4 @@
-"""Sensor platform for Samsung TV WS."""
+"""Sensor platform for Samsung TV Art."""
 
 from __future__ import annotations
 
@@ -11,8 +11,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
-from .coordinator import SamsungTvWsCoordinator
-from .entity import SamsungTvWsEntity
+from .coordinator import SamsungTvArtCoordinator
+from .entity import SamsungTvArtEntity
 
 
 async def async_setup_entry(
@@ -20,19 +20,19 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up Samsung TV WS sensors."""
-    coordinator: SamsungTvWsCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([SamsungTvWsDeviceInfoSensor(coordinator)])
+    """Set up Samsung TV Art sensors."""
+    coordinator: SamsungTvArtCoordinator = hass.data[DOMAIN][entry.entry_id]
+    async_add_entities([SamsungTvArtDeviceInfoSensor(coordinator)])
 
 
-class SamsungTvWsDeviceInfoSensor(SamsungTvWsEntity, SensorEntity):
+class SamsungTvArtDeviceInfoSensor(SamsungTvArtEntity, SensorEntity):
     """Diagnostic sensor exposing Samsung TV device information."""
 
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_icon = "mdi:television"
     _attr_translation_key = "device_info"
 
-    def __init__(self, coordinator: SamsungTvWsCoordinator) -> None:
+    def __init__(self, coordinator: SamsungTvArtCoordinator) -> None:
         """Initialize the device info sensor."""
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.unique_id}_device_info"

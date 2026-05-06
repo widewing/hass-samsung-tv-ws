@@ -1,4 +1,4 @@
-"""Switch platform for Samsung TV WS."""
+"""Switch platform for Samsung TV Art."""
 
 from __future__ import annotations
 
@@ -13,8 +13,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN, UPDATE_INTERVAL
-from .coordinator import SamsungTvWsCoordinator
-from .entity import SamsungTvWsEntity
+from .coordinator import SamsungTvArtCoordinator
+from .entity import SamsungTvArtEntity
 
 SCAN_INTERVAL = UPDATE_INTERVAL
 _LOGGER = logging.getLogger(__name__)
@@ -25,19 +25,19 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up Samsung TV WS switches."""
-    coordinator: SamsungTvWsCoordinator = hass.data[DOMAIN][entry.entry_id]
+    """Set up Samsung TV Art switches."""
+    coordinator: SamsungTvArtCoordinator = hass.data[DOMAIN][entry.entry_id]
     if coordinator.art_supported:
-        async_add_entities([SamsungTvWsArtModeSwitch(coordinator)])
+        async_add_entities([SamsungTvArtModeSwitch(coordinator)])
 
 
-class SamsungTvWsArtModeSwitch(SamsungTvWsEntity, SwitchEntity):
+class SamsungTvArtModeSwitch(SamsungTvArtEntity, SwitchEntity):
     """Switch that controls Frame TV Art Mode."""
 
     _attr_icon = "mdi:image-frame"
     _attr_translation_key = "art_mode"
 
-    def __init__(self, coordinator: SamsungTvWsCoordinator) -> None:
+    def __init__(self, coordinator: SamsungTvArtCoordinator) -> None:
         """Initialize the Art Mode switch."""
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.unique_id}_art_mode"

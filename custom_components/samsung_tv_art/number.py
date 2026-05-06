@@ -1,4 +1,4 @@
-"""Number platform for Samsung TV WS."""
+"""Number platform for Samsung TV Art."""
 
 from __future__ import annotations
 
@@ -20,8 +20,8 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN, UPDATE_INTERVAL
-from .coordinator import SamsungTvWsCoordinator
-from .entity import SamsungTvWsEntity
+from .coordinator import SamsungTvArtCoordinator
+from .entity import SamsungTvArtEntity
 
 SCAN_INTERVAL = UPDATE_INTERVAL
 _LOGGER = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ _CONNECTION_ERRORS = (
 
 
 @dataclass(frozen=True, kw_only=True)
-class SamsungTvWsArtNumberDescription(NumberEntityDescription):
+class SamsungTvArtNumberDescription(NumberEntityDescription):
     """Description for an Art Mode number entity."""
 
     get_method: str
@@ -44,8 +44,8 @@ class SamsungTvWsArtNumberDescription(NumberEntityDescription):
     value_converter: Callable[[float], int | float]
 
 
-ART_NUMBER_DESCRIPTIONS: tuple[SamsungTvWsArtNumberDescription, ...] = (
-    SamsungTvWsArtNumberDescription(
+ART_NUMBER_DESCRIPTIONS: tuple[SamsungTvArtNumberDescription, ...] = (
+    SamsungTvArtNumberDescription(
         key="art_brightness",
         translation_key="art_brightness",
         icon="mdi:brightness-6",
@@ -56,7 +56,7 @@ ART_NUMBER_DESCRIPTIONS: tuple[SamsungTvWsArtNumberDescription, ...] = (
         native_step=1,
         value_converter=round,
     ),
-    SamsungTvWsArtNumberDescription(
+    SamsungTvArtNumberDescription(
         key="art_color_temperature",
         translation_key="art_color_temperature",
         icon="mdi:thermometer-lines",
@@ -75,20 +75,20 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up Samsung TV WS numbers."""
-    coordinator: SamsungTvWsCoordinator = hass.data[DOMAIN][entry.entry_id]
+    """Set up Samsung TV Art numbers."""
+    coordinator: SamsungTvArtCoordinator = hass.data[DOMAIN][entry.entry_id]
     if not coordinator.art_supported:
         return
 
     async_add_entities(
         [
-            SamsungTvWsArtNumber(coordinator, description)
+            SamsungTvArtNumber(coordinator, description)
             for description in ART_NUMBER_DESCRIPTIONS
         ]
     )
 
 
-class SamsungTvWsArtNumber(SamsungTvWsEntity, NumberEntity):
+class SamsungTvArtNumber(SamsungTvArtEntity, NumberEntity):
     """Number entity for an Art Mode setting."""
 
     _attr_device_class = None
@@ -97,8 +97,8 @@ class SamsungTvWsArtNumber(SamsungTvWsEntity, NumberEntity):
 
     def __init__(
         self,
-        coordinator: SamsungTvWsCoordinator,
-        description: SamsungTvWsArtNumberDescription,
+        coordinator: SamsungTvArtCoordinator,
+        description: SamsungTvArtNumberDescription,
     ) -> None:
         """Initialize the Art Mode number."""
         super().__init__(coordinator)

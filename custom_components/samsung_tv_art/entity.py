@@ -1,4 +1,4 @@
-"""Base entities for Samsung TV WS."""
+"""Base entities for Samsung TV Art."""
 
 from __future__ import annotations
 
@@ -12,15 +12,15 @@ from homeassistant.helpers.device_registry import (
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .coordinator import SamsungTvWsCoordinator
+from .coordinator import SamsungTvArtCoordinator
 
 
-class SamsungTvWsEntity(CoordinatorEntity[SamsungTvWsCoordinator]):
-    """Base Samsung TV WS entity."""
+class SamsungTvArtEntity(CoordinatorEntity[SamsungTvArtCoordinator]):
+    """Base Samsung TV Art entity."""
 
     _attr_has_entity_name = True
 
-    def __init__(self, coordinator: SamsungTvWsCoordinator) -> None:
+    def __init__(self, coordinator: SamsungTvArtCoordinator) -> None:
         """Initialize the entity."""
         super().__init__(coordinator)
 
