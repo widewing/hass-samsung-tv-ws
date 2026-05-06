@@ -8,18 +8,11 @@ from dataclasses import dataclass
 from functools import partial
 import json
 import logging
-from types import MethodType
 from typing import Any, TypeVar
 
 import aiohttp
 from samsungtvws import SamsungTVWS, exceptions
 from samsungtvws.async_rest import SamsungTVAsyncRest
-from samsungtvws.connection import SamsungTVWSConnection
-from samsungtvws.event import (
-    MS_CHANNEL_CLIENT_CONNECT_EVENT,
-    MS_CHANNEL_CONNECT_EVENT,
-    MS_CHANNEL_READY_EVENT,
-)
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -31,7 +24,6 @@ from .const import DEFAULT_TIMEOUT, DOMAIN, UPDATE_INTERVAL
 _LOGGER = logging.getLogger(__name__)
 
 _T = TypeVar("_T")
-_ART_STARTUP_EVENTS = {MS_CHANNEL_CLIENT_CONNECT_EVENT, MS_CHANNEL_CONNECT_EVENT}
 
 
 @dataclass(frozen=True)
@@ -155,7 +147,6 @@ class SamsungTvWsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Execute an Art Mode method."""
         tv = self._make_tv()
         art = tv.art()
-        _patch_art_open(art)
         try:
             return getattr(art, method)(*args, **kwargs)
         finally:
@@ -226,25 +217,6 @@ def art_supported(data: dict[str, Any] | None) -> bool:
         support = parsed.get("FrameTVSupport")
 
     return _truthy(support)
-
-
-def _patch_art_open(art: Any) -> None:
-    """Allow Samsung Art websocket startup events before channel ready."""
-
-    def open_with_startup_events(self: Any) -> Any:
-        SamsungTVWSConnection.open(self)
-        while True:
-            event, frame = self._recv_frame()
-            if event == MS_CHANNEL_READY_EVENT:
-                return self.connection
-            if event in _ART_STARTUP_EVENTS:
-                _LOGGER.debug("Ignoring Samsung Art websocket startup event: %s", event)
-                continue
-
-            self.close()
-            raise exceptions.ConnectionFailure(frame)
-
-    art.open = MethodType(open_with_startup_events, art)
 
 
 def _truthy(value: Any) -> bool:
