@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from samsungtvws import exceptions
@@ -16,6 +17,7 @@ from .coordinator import SamsungTvWsCoordinator
 from .entity import SamsungTvWsEntity
 
 SCAN_INTERVAL = UPDATE_INTERVAL
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -61,7 +63,9 @@ class SamsungTvWsArtModeSwitch(SamsungTvWsEntity, SwitchEntity):
             exceptions.ResponseError,
             OSError,
             TimeoutError,
-        ):
+        ) as err:
+            if self._art_available:
+                _LOGGER.warning("Unable to fetch Samsung Art Mode state: %s", err)
             self._art_available = False
             return
 

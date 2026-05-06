@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass
+import logging
 from typing import Any
 
 from samsungtvws import exceptions
@@ -19,6 +20,7 @@ from .coordinator import SamsungTvWsCoordinator
 from .entity import SamsungTvWsEntity
 
 SCAN_INTERVAL = UPDATE_INTERVAL
+_LOGGER = logging.getLogger(__name__)
 
 _CONNECTION_ERRORS = (
     exceptions.ConnectionFailure,
@@ -80,12 +82,16 @@ class SamsungTvWsArtworkSelect(SamsungTvWsEntity, SelectEntity):
         """Refresh artwork options and current artwork state."""
         try:
             artworks = await self.coordinator.async_art_call("available")
-        except exceptions.ResponseError:
+        except exceptions.ResponseError as err:
+            if self._artworks_available:
+                _LOGGER.warning("Unable to fetch Samsung artwork list: %s", err)
             self._artworks_available = False
             self._attr_options = []
             self._artworks = {}
             return
-        except _CONNECTION_ERRORS:
+        except _CONNECTION_ERRORS as err:
+            if self._artworks_available:
+                _LOGGER.warning("Unable to fetch Samsung artwork list: %s", err)
             self._artworks_available = False
             return
 
@@ -125,7 +131,10 @@ class SamsungTvWsArtworkSelect(SamsungTvWsEntity, SelectEntity):
 
         try:
             current = await self.coordinator.async_art_call("get_current")
-        except (exceptions.ResponseError, *_CONNECTION_ERRORS):
+        except (exceptions.ResponseError, *_CONNECTION_ERRORS) as err:
+            _LOGGER.debug(
+                "Unable to fetch current Samsung artwork: %s", err, exc_info=True
+            )
             return self._attr_current_option
 
         content_id = _string_value(current, "content_id", "contentId", "id")

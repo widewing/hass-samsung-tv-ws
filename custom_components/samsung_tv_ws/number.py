@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+import logging
 from typing import Any
 
 from samsungtvws import exceptions
@@ -23,6 +24,7 @@ from .coordinator import SamsungTvWsCoordinator
 from .entity import SamsungTvWsEntity
 
 SCAN_INTERVAL = UPDATE_INTERVAL
+_LOGGER = logging.getLogger(__name__)
 
 _CONNECTION_ERRORS = (
     exceptions.ConnectionFailure,
@@ -126,11 +128,23 @@ class SamsungTvWsArtNumber(SamsungTvWsEntity, NumberEntity):
             value = await self.coordinator.async_art_call(
                 self.entity_description.get_method
             )
-        except exceptions.ResponseError:
+        except exceptions.ResponseError as err:
+            _LOGGER.debug(
+                "Unable to fetch Samsung Art setting %s: %s",
+                self.entity_description.key,
+                err,
+                exc_info=True,
+            )
             self._attr_native_value = None
             self._setting_available = True
             return
-        except _CONNECTION_ERRORS:
+        except _CONNECTION_ERRORS as err:
+            if self._setting_available:
+                _LOGGER.warning(
+                    "Unable to fetch Samsung Art setting %s: %s",
+                    self.entity_description.key,
+                    err,
+                )
             self._setting_available = False
             return
 
