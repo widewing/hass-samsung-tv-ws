@@ -49,7 +49,7 @@ ART_NUMBER_DESCRIPTIONS: tuple[SamsungTvWsArtNumberDescription, ...] = (
         get_method="get_brightness",
         set_method="set_brightness",
         native_min_value=0,
-        native_max_value=100,
+        native_max_value=10,
         native_step=1,
         value_converter=round,
     ),

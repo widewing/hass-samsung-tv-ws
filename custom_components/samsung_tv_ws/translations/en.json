@@ -36,9 +36,6 @@
       }
     },
     "select": {
-      "app_launcher": {
-        "name": "App launcher"
-      },
       "artwork": {
         "name": "Artwork"
       }

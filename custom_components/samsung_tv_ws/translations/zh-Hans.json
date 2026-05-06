@@ -36,9 +36,6 @@
       }
     },
     "select": {
-      "app_launcher": {
-        "name": "应用启动器"
-      },
       "artwork": {
         "name": "艺术作品"
       }

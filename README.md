@@ -18,8 +18,6 @@
   - `number` 实体：Art brightness、Art color temperature。
   - `select` 实体：Artwork，选择后立即显示对应 artwork。
   - 服务：开启/关闭 Art Mode、列出 artwork、获取当前 artwork、上传图片、选择图片、删除图片、修改 matte、设置亮度和色温。
-- App：
-  - `select` 实体：App launcher，选择已安装 app 后立即启动。
 
 ## 安装
 

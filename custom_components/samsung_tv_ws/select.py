@@ -29,15 +29,6 @@ _CONNECTION_ERRORS = (
 
 
 @dataclass(frozen=True)
-class AppOption:
-    """A selectable TV app."""
-
-    label: str
-    app_id: str
-    app_type: str
-
-
-@dataclass(frozen=True)
 class ArtworkOption:
     """A selectable artwork."""
 
@@ -53,76 +44,11 @@ async def async_setup_entry(
 ) -> None:
     """Set up Samsung TV WS selects."""
     coordinator: SamsungTvWsCoordinator = hass.data[DOMAIN][entry.entry_id]
-    entities: list[SelectEntity] = [SamsungTvWsAppSelect(coordinator)]
+    entities: list[SelectEntity] = []
     if coordinator.art_supported:
         entities.append(SamsungTvWsArtworkSelect(coordinator))
 
     async_add_entities(entities, True)
-
-
-class SamsungTvWsAppSelect(SamsungTvWsEntity, SelectEntity):
-    """Select entity that launches installed TV apps."""
-
-    _attr_icon = "mdi:apps"
-    _attr_translation_key = "app_launcher"
-
-    def __init__(self, coordinator: SamsungTvWsCoordinator) -> None:
-        """Initialize the app launcher select."""
-        super().__init__(coordinator)
-        self._attr_unique_id = f"{coordinator.unique_id}_app_launcher"
-        self._attr_current_option: str | None = None
-        self._attr_options: list[str] = []
-        self._apps: dict[str, AppOption] = {}
-        self._apps_available = True
-
-    @property
-    def available(self) -> bool:
-        """Return whether app options are available."""
-        return super().available and self._apps_available
-
-    @property
-    def should_poll(self) -> bool:
-        """Refresh installed app options by polling."""
-        return True
-
-    async def async_update(self) -> None:
-        """Refresh installed app options."""
-        try:
-            apps = await self.coordinator.async_tv_call("app_list")
-        except (exceptions.ResponseError, *_CONNECTION_ERRORS):
-            self._apps_available = False
-            return
-
-        if not apps:
-            self._apps_available = False
-            self._attr_options = []
-            self._apps = {}
-            return
-
-        options = _build_app_options(apps)
-        self._apps = {option.label: option for option in options}
-        self._attr_options = [option.label for option in options]
-        if self._attr_current_option not in self._apps:
-            self._attr_current_option = None
-        self._apps_available = True
-
-    async def async_select_option(self, option: str) -> None:
-        """Launch the selected app."""
-        app = self._apps.get(option)
-        if app is None:
-            raise HomeAssistantError(f"Unknown Samsung TV app option: {option}")
-
-        try:
-            await self.coordinator.async_tv_call(
-                "run_app", app.app_id, app_type=app.app_type
-            )
-        except (exceptions.ResponseError, *_CONNECTION_ERRORS) as err:
-            self._apps_available = not isinstance(err, _CONNECTION_ERRORS)
-            raise HomeAssistantError(f"Failed to launch Samsung TV app: {err}") from err
-
-        self._attr_current_option = option
-        self._apps_available = True
-        self.async_write_ha_state()
 
 
 class SamsungTvWsArtworkSelect(SamsungTvWsEntity, SelectEntity):
@@ -213,23 +139,6 @@ class SamsungTvWsArtworkSelect(SamsungTvWsEntity, SelectEntity):
         return self._attr_current_option
 
 
-def _build_app_options(apps: list[dict[str, Any]]) -> list[AppOption]:
-    """Build unique select options for installed apps."""
-    app_rows: list[tuple[str, str, str]] = []
-    for app in apps:
-        app_id = _string_value(app, "appId", "app_id", "id")
-        if not app_id:
-            continue
-
-        name = _string_value(app, "name", "title") or app_id
-        app_rows.append((name, app_id, _app_type(app.get("app_type"))))
-
-    return [
-        AppOption(label, app_id, app_type)
-        for label, app_id, app_type in _unique_labels(app_rows)
-    ]
-
-
 def _build_artwork_options(artworks: list[dict[str, Any]]) -> list[ArtworkOption]:
     """Build unique select options for artwork content."""
     artwork_rows: list[tuple[str, str, str | None]] = []
@@ -287,10 +196,3 @@ def _string_value(data: dict[str, Any] | Any, *keys: str) -> str | None:
             return str(value)
 
     return None
-
-
-def _app_type(value: Any) -> str:
-    """Normalize Samsung app type values for launch_app."""
-    if isinstance(value, str) and value in {"DEEP_LINK", "NATIVE_LAUNCH"}:
-        return value
-    return "DEEP_LINK" if value == 2 or str(value) == "2" else "NATIVE_LAUNCH"
